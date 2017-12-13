@@ -58,12 +58,21 @@ namespace StockholmHousePricesUI
                 var pricem2 = house.SelectSingleNode(".//li[@class='price-per-m2 item-result-meta-attribute-subtle']").InnerText.Trim();
                 var area = house.SelectSingleNode(".//li[@class='area item-result-meta-attribute-subtle']").InnerText.Trim();
 
-                houseObject.Id = id;
+                houseObject.HouseId = id;
                 houseObject.Name = id.ToString();
                 houseObject.Prize = int.Parse(prize.Replace("kr", "").Trim().Replace(" ", string.Empty));
                 houseObject.Size = size;
                 houseObject.Area = area;
                 houseObject.Location = city;
+                houseObject.MapLocation = "";
+                houseObject.DistanceFromCenter = 0;
+                houseObject.DaysInTheMarket = 0;
+                houseObject.AvGift = 0;
+                houseObject.NumberOfRooms = 0;
+                houseObject.HasBids = false;
+                houseObject.LastBid = 0;
+                houseObject.Comments = "";
+                houseObject.Created = DateTime.Now;
 
                 housesList.Add(houseObject);
             }
@@ -83,7 +92,8 @@ namespace StockholmHousePricesUI
                               " - link: " + " https://www.hemnet.se/bostad/" + ohouse.Id.ToString();
                 Console.WriteLine(line);
                 this.richTextBox1.Text += line + Environment.NewLine;
-                this.AddHouse(db, ohouse);
+                if (this.chkSaveToDatabase.Checked)
+                    this.AddHouse(db, ohouse);
             }
         }
 
@@ -93,9 +103,11 @@ namespace StockholmHousePricesUI
             var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HousePrices.db");
 
             var db = new SQLiteConnection(databasePath);
-            //db.CreateTable<House>();
+            db.CreateTable<House>();
             //db.CreateTable<Valuation>();
+           
             var query = db.Table<House>();
+            //var remove = db.Table<House>().Delete(x => x.Id > 0);
         }
 
         private void AddHouse(SQLiteConnection db, House house)
@@ -107,14 +119,24 @@ namespace StockholmHousePricesUI
 
     public class House
     {
-        [PrimaryKey]
+        [PrimaryKey][AutoIncrement]
         public int Id { get; set; }
+        public int HouseId { get; set; }
         public string Area { get; set; }
         public string Name { get; set; }
         public int Prize { get; set; }
         public string Size { get; set; }
         public string Location { get; set; }
+        public string MapLocation { get; set; }
+        public int DistanceFromCenter { get; set; }
+        public int DaysInTheMarket { get; set; }
+        public int AvGift { get; set; }
+        public int NumberOfRooms { get; set; }
+        public bool HasBids { get; set; }
+        public int LastBid { get; set; }
+        public string Comments { get; set; }
         public DateTime Created { get; set; }
     }
 }
+
 
