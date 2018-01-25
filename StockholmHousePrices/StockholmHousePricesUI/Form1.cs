@@ -50,7 +50,16 @@ namespace StockholmHousePricesUI
             {
                 House houseObject = new House();
 
-                var id = int.Parse(house.SelectSingleNode(".//img[@class='property-image']").Attributes.AttributesWithName("onerror").FirstOrDefault().DeEntitizeValue.Split('"')[5].Replace("ID", ""));
+                //var id = int.Parse(house.SelectSingleNode(".//img[@class='property-image']").Attributes.AttributesWithName("onerror").FirstOrDefault().DeEntitizeValue.Split('"')[5].Replace("ID", ""));
+                //var id = house.SelectSingleNode(".//li[@class='id item-result-meta-attribute-is-bold']").InnerText.Trim();
+                int id = 0;
+
+                var res = house.ChildNodes[1].Attributes;
+
+                //AttributesWithName("onerror").FirstOrDefault().DeEntitizeValue.Split('"')[5].Replace("ID", "");
+
+                return;
+
                 var prize = house.SelectSingleNode(".//li[@class='price item-result-meta-attribute-is-bold']").InnerText.Trim();
                 var size = house.SelectSingleNode(".//li[@class='living-area item-result-meta-attribute-is-bold']").InnerText.Trim();
                 var city = house.SelectSingleNode(".//li[@class='city item-result-meta-attribute-subtle']").InnerText.Trim();
@@ -58,7 +67,7 @@ namespace StockholmHousePricesUI
                 var pricem2 = house.SelectSingleNode(".//li[@class='price-per-m2 item-result-meta-attribute-subtle']").InnerText.Trim();
                 var area = house.SelectSingleNode(".//li[@class='area item-result-meta-attribute-subtle']").InnerText.Trim();
 
-                houseObject.HouseId = id;
+                houseObject.HouseId = 0;//id //int.Parse(id);
                 houseObject.Name = id.ToString();
                 houseObject.Prize = int.Parse(prize.Replace("kr", "").Trim().Replace(" ", string.Empty));
                 houseObject.Size = size;
@@ -89,7 +98,7 @@ namespace StockholmHousePricesUI
             {
                 string line = "House: " + ohouse.Id.ToString() + " - Price " + ohouse.Prize + " - location: " +
                               ohouse.Location + " / " + ohouse.Area + " - size: " + ohouse.Size +
-                              " - link: " + " https://www.hemnet.se/bostad/" + ohouse.Id.ToString();
+                              " - link: " + " https://www.hemnet.se/bostad/" + ohouse.HouseId.ToString();
                 Console.WriteLine(line);
                 this.richTextBox1.Text += line + Environment.NewLine;
                 if (this.chkSaveToDatabase.Checked)
